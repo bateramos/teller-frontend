@@ -1,11 +1,16 @@
 .Container {
   position: absolute;
   display: flex;
-  width: 200px;
+  flex-direction: column;
+  width: 300px;
   min-height: 100px;
 }
 
 .Text-Input {
   flex-grow: 1;
   margin: 10px;
+}
+
+.Connect-Button {
+  flex-grow: 1;
 }

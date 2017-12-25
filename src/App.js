@@ -2,22 +2,78 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import createHash from 'hash-sum';
+
 import TextNode from './components/nodes/TextNode';
 import CreateNodeMenu from './components/nodes/CreateNodeMenu';
+import ConnectionLine from './components/nodes/ConnectionLine';
 
 class App extends Component {
 
   state = {
-    canvasItems: [{ x: 50, y: 50 }],
+    canvasItems: [{
+      x: 50, y: 50,
+      id: createHash(new Date().getTime())
+    }],
     openMenuPositon: { x :0, y: 0 },
     openMenu: false,
   };
 
   clickOnCanvas(event) {
     const { offsetX, offsetY } = event.nativeEvent;
+
+    if (this.state.movingNode) {
+      const { canvasItems, currentSelectedNode } = this.state;
+      const node = canvasItems.find(i => i.id === currentSelectedNode);
+      node.x = offsetX;
+      node.y = offsetY;
+
+      return this.setState({
+        movingNode: false,
+        currentSelectedNode: null,
+        canvasItems: [...canvasItems],
+      });
+    }
+    
     this.setState({
       openMenu: true,
       openMenuPositon: { x: offsetX, y: offsetY },
+    });
+  }
+
+  onMoveStart(nodeId) {
+    this.setState({
+      movingNode: true,
+      currentSelectedNode: nodeId,
+    });
+  }
+
+  onCreateConnection(nodeId) {
+    this.setState({
+      connectNode: true,
+      currentSelectedNode: nodeId,
+    });
+  }
+
+  onCancelCreateConnect() {
+    this.setState({
+      connectNode: false,
+      currentSelectedNode: null,
+    }); 
+  }
+
+  onConnect(nodeId) {
+    const { canvasItems, currentSelectedNode } = this.state;
+
+    const node = canvasItems.find(i => i.id === currentSelectedNode);
+    const targetNode = canvasItems.find(i => i.id === nodeId);
+
+    node.connectTo = targetNode;
+
+    this.setState({
+      connectNode: false,
+      currentSelectedNode: null,
+      canvasItems: [...canvasItems],
     });
   }
 
@@ -30,7 +86,11 @@ class App extends Component {
     this.setState({
       canvasItems: [
         ...canvasItems,
-        { x: openMenuPositon.x, y: openMenuPositon.y },
+        {
+          id: createHash(new Date().getTime()),
+          x: openMenuPositon.x,
+          y: openMenuPositon.y,
+        },
       ],
       openMenu: false,
     });
@@ -56,9 +116,29 @@ class App extends Component {
             y={this.state.openMenuPositon.y}
             onCreateNode={this.menuCreateNode.bind(this)}
             onCancel={this.menuCancel.bind(this)}
+            
           />
-          {this.state.canvasItems.map(e => (<TextNode key={`${e.x}${e.y}`} x={e.x} y={e.y} />))}
+          {this.state.canvasItems
+            .filter(e => e.connectTo)
+            .map(e => (
+              <ConnectionLine
+                key={`Line_${e.id}_${e.connectTo.id}`}
+                nodeOrigin={e}
+                nodeDestiny={e.connectTo} />
+            ))
+          }
+          {this.state.canvasItems.map(e => (
+            <TextNode key={e.id} x={e.x} y={e.y} id={e.id}
+              hasConnection={!!e.connectTo}
+              connectionMode={this.state.connectNode}
+              onCreateConnection={this.onCreateConnection.bind(this)}
+              onCancelCreateConnect={this.onCancelCreateConnect.bind(this)}
+              onMoveStart={this.onMoveStart.bind(this)}
+              onConnect={this.onConnect.bind(this)}
+            />
+          ))}
         </div>
+        
       </div>
     );
   }
