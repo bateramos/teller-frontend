@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import test from 'ava';
 import { shallow } from 'enzyme';
 
