@@ -48,6 +48,10 @@ class App extends Component {
     });
   }
 
+  onDelete(nodeId) {
+
+  }
+
   onCreateConnection(nodeId) {
     this.setState({
       connectNode: true,
@@ -134,6 +138,7 @@ class App extends Component {
               onCreateConnection={this.onCreateConnection.bind(this)}
               onCancelCreateConnect={this.onCancelCreateConnect.bind(this)}
               onMoveStart={this.onMoveStart.bind(this)}
+              onDelete={this.onDelete.bind(this)}
               onConnect={this.onConnect.bind(this)}
             />
           ))}

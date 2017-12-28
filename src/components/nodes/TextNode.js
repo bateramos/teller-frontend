@@ -23,6 +23,7 @@ class TextNode extends Component {
     onCreateConnection: PropTypes.func.isRequired,
     onCancelCreateConnect: PropTypes.func.isRequired,
     onMoveStart: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
     onConnect: PropTypes.func.isRequired,
     connectionMode: PropTypes.bool,
   }
@@ -47,6 +48,10 @@ class TextNode extends Component {
     this.props.onMoveStart(this.props.id);
   }
 
+  onDelete() {
+    this.props.onDelete(this.props.id);
+  }
+
   onConnect() {
     this.props.onConnect(this.props.id);
   }
@@ -57,7 +62,7 @@ class TextNode extends Component {
   }
 
   render() {
-    const { connectionMode, hasConnection } = this.props;
+    const { connectionMode, hasConnection, onDelete } = this.props;
     const { creatingConnection } = this.state;
     return (
       <Paper className="Container" onClick={this.onClick} zDepth={5} style={{ left: this.props.x, top: this.props.y }}>
@@ -65,7 +70,7 @@ class TextNode extends Component {
           <IconButton tooltip="move" onClick={this.onMoveStart.bind(this)}>
             <ActionList />
           </IconButton>
-          <IconButton tooltip="delete">
+          <IconButton tooltip="delete" onClick={this.onDelete.bind(this)}>
             <ActionDelete />
           </IconButton>
         </div>
