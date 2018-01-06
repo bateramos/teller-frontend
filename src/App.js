@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import logo from './logo.svg';
 import './App.css';
 
@@ -9,6 +11,16 @@ import CreateNodeMenu from './components/nodes/CreateNodeMenu';
 import ConnectionLine from './components/nodes/ConnectionLine';
 
 class App extends Component {
+
+  static propTypes = {
+    canvasItems: PropTypes.array([
+      PropTypes.shape({
+        x: PropTypes.number.isRequired,
+        y: PropTypes.number.isRequired,
+        id: PropTypes.string.isRequired,
+      })
+    ])
+  }
 
   state = {
     canvasItems: [{
