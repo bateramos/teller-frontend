@@ -1,3 +1,4 @@
-.Container {
+.CreateMenuContainer {
   position: absolute;
+  display: flex;
 }

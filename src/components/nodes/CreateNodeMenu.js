@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 
 import {
   DropDownMenu,
+  Menu,
   MenuItem,
+  Popover,
 } from 'material-ui';
 
 export default class CreateNodeMenu extends Component {
@@ -23,12 +25,17 @@ export default class CreateNodeMenu extends Component {
       onCancel,
     } = this.props;
 
-    return open && (
-      <div className="Container" style={{ left: x, top: y }}>
-        <DropDownMenu openImmediately={true}>
-          <MenuItem onClick={onCreateNode} primaryText="Create Node" />
-          <MenuItem onClick={onCancel} primaryText="Cancel" />
-        </DropDownMenu>
+    return (
+      <div className="CreateMenuContainer" ref={ref => this.container = ref} style={{ width: x, height: y }}>
+        <Popover open={open}
+          anchorOrigin={{horizontal: "right", vertical: "bottom"}}
+          targetOrigin={{horizontal: "left", vertical: "top"}}
+          anchorEl={this.container}>
+          <Menu>
+            <MenuItem onClick={onCreateNode} primaryText="Create Node" />
+            <MenuItem onClick={onCancel} primaryText="Cancel" />
+          </Menu>
+        </Popover>
       </div>
     );
   }

@@ -13,7 +13,7 @@ import ConnectionLine from './components/nodes/ConnectionLine';
 class App extends Component {
 
   static propTypes = {
-    canvasItems: PropTypes.array([
+    canvasItems: PropTypes.arrayOf([
       PropTypes.shape({
         x: PropTypes.number.isRequired,
         y: PropTypes.number.isRequired,
